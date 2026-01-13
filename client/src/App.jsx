@@ -5,11 +5,16 @@ import { useEffect, useState } from "react";
 function App() {
   const [data, setData] = useState([]) 
   const [isWating, setIsWating] = useState(true)
+  const [isError, setIsError] = useState({error: false, errorMessage: ""})
 
   async function requsetReadingData(){
-    const response = await axios.get("http://localhost:4001/products")
-    setData(response.data.data)
-    setIsWating(false)
+    try {
+      const response = await axios.get("http://localhost:4001/productss")
+      setData(response.data.data)
+      setIsWating(false)
+    } catch (error) {
+      setIsError({error: true, errorMessage: error})
+    }
   }
 
   async function handleDelData(id){
@@ -24,8 +29,9 @@ function App() {
   },[])
 
   return (
-    <div className="App">
-      {isWating? <h1>Loading...</h1> : 
+    <div className="App"> 
+      {isError.error?  <h1>Fetching Error...</h1> :
+      isWating? <h1>Loading...</h1> : 
       <>
         <div className="app-wrapper">
           <h1 className="app-title">Products</h1>
